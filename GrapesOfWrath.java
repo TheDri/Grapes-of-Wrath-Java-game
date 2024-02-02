@@ -172,7 +172,7 @@ public class GrapesOfWrath
             }
             else if (num < 7)
             {
-                if (people.get(i).getName().toLowerCase()equals("pablo"))
+                if (people.get(i).getName().toLowerCase().equals("pablo"))
                 {
                     System.out.println(people.get(i).getName() + " was arrested for smuggling cocaine.");
                 } else
