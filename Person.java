@@ -1,12 +1,14 @@
 public class Person
 {
    private int health;
+   private int startHealth;
    private int foodNeeded;
    private boolean sick;
    private String name;
    public Person(String newName)
    {
        health = (int) (Math.random() * 65 + 60);
+       startHealth = health;
        foodNeeded = (int)  (Math.random() * 100 + 200);
        sick = false;
        name = newName;
@@ -33,7 +35,6 @@ public class Person
            }
        }
    }
-
    public boolean isAlive()
    {
        return health > 0;
@@ -64,5 +65,9 @@ public class Person
    public void infect()
    {
        sick = true;
+   }
+   public boolean inGoodHealth()
+   {
+      return health > startHealth/2;
    }
 }
