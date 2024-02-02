@@ -11,7 +11,9 @@ public class GrapesOfWrath
     private static int distance = 0;
     private static Scanner console = new Scanner(System.in);
     private static int gas = 500;
+    private static int initialFood = 0;
     private static int food = 0;
+    private static double initialMoney = 0.0;
     private static double money = 0.0;
     private static int cityIndex = 0;
     private static int restingPlace = 0;
@@ -27,7 +29,9 @@ public class GrapesOfWrath
             console.nextLine();
         } 
         food = 2500*p;
+        initialFood = food;
         money = 16.0*p;
+        initialMoney = money;
         for (int i = 0; i < p; i++)
         {
             System.out.println("What is the name of party member #"+(i+1)+"? ");
@@ -70,7 +74,7 @@ public class GrapesOfWrath
                     cityIndex++;
                     if (cityIndex >= 34)
                     {
-                        goodEnding();
+                        goodEnding(people);
                     }
                     buy();
                     RandomEvents.cityEvents();
@@ -104,7 +108,7 @@ public class GrapesOfWrath
                 if (gas == 0)
                 {
                     System.out.println("You've run out of gas.");
-                    badEnding();
+                    badEnding(people);
                 }
             }
         }
@@ -158,7 +162,7 @@ public class GrapesOfWrath
             RandomEvents.campEvents();
         else if (restingPlace == 2)
             RandomEvents.cityEvents();
-        for (int i = 0; i < p; i++)
+        for (int i = 0; i < people.size(); i++)
         {
             int num = (int)(1+Math.random()*200);
             if (num < 6 && !people.get(i).isSick())
@@ -168,11 +172,17 @@ public class GrapesOfWrath
             }
             else if (num < 7)
             {
-                System.out.println(people.get(i).getName() + " was arrested in a disagreement with the police.");
+                if (people.get(i).getName().equals("Pablo"))
+                {
+                    System.out.println(people.get(i).getName() + " was arrested for smuggling cocaine.");
+                } else
+                {
+                    System.out.println(people.get(i).getName() + " was arrested in a disagreement with the police.");
+                }
                 people.get(i).addHealth(-99999);
             }
         }
-        for (int i = 0; i < p; i++)
+        for (int i = 0; i < people.size(); i++)
         {
             if (people.get(i).isAlive())
             {
@@ -182,7 +192,7 @@ public class GrapesOfWrath
                     death(people.get(i));
             }
         }
-        for (int i = 0; i < p; i++)
+        for (int i = 0; i < people.size(); i++)
         {
             if (people.get(i).isAlive() && people.get(i).isSick())
             {
@@ -195,21 +205,20 @@ public class GrapesOfWrath
         {
             if (!people.get(i).isAlive())
             {
-                p--;
                 people.remove(i);
                 i--;
             }
         } 
-        if (p == 0)
+        if (people.size() == 0)
         {
-            badEnding();
+            badEnding(people);
         }
         System.out.println("You currently have $"+d.format(money)+", "+(food/100.0)+" pounds of food, and "+(gas/25.0)+" gallons of gas.");
     }
     private static void rest(List<Person> people)
     {
         System.out.println("You rest for the day.");
-        for (int i = 0; i < p; i++)
+        for (int i = 0; i < people.size(); i++)
         {
             if (people.get(i).isAlive())
                 people.get(i).addHealth(10);
@@ -227,14 +236,53 @@ public class GrapesOfWrath
             buy();
         stay(people);
     } 
-    private static void goodEnding()
+    private static void calcScore(boolean won, List<Person> people)
+    {
+        int score = distance;
+        System.out.println("Distance travelled: "+distance+" . . . . "+distance);
+        if (won)
+        {
+            score += 1500;
+            System.out.println("Victory bonus: 1500 . . . . 1500");
+        } else
+        {
+            System.out.println("Victory bonus: 0 . . . . 0");
+        }
+        score += (int)(people.size()*1500.0/p);
+        System.out.println("Party members remaining: "+people.size()+" . . . . "+(int)(people.size()*1500.0/p));
+        int healthyPeople = 0;
+        for (int i = 0; i < people.size(); i++)
+        {
+            if (people.get(i).inGoodHealth())
+            {
+                healthyPeople++;
+            }
+        }
+        score += (int)(healthyPeople*500.0/p);
+        System.out.println("Party members in good health: "+healthyPeople+" . . . . "+(int)(healthyPeople*500.0/p));
+        score += (int)(money/initialMoney*100.0);
+        System.out.println("Money remaining: $"+d.format(money)+" . . . . . "+(int)(money/initialMoney*100.0));
+        score += gas;
+        System.out.println("Gas remaining: "+d.format(gas/25.0)+" gallons . . . . "+gas/2);
+        score += (int)(food*750.0/initialFood);
+        System.out.println("Food remaining: "+d.format(food/100.0)+" pounds . . . . "+(int)(food*750.0/initialFood));
+        System.out.println("Total score: . . . . "+score);
+    }
+    private static void goodEnding(List<Person> people)
     {
         System.out.println("From the top of a hill you can see the green field below, covered in fruit trees and white houses, just like the handbills.\nYour party chats giddily about the peaches to be picked, the houses to be lived in, and the money to be earned. \nYou smile at the long-awaited beauty. However, this is merely the start of your new life. Jobs are scarce, and don't pay\nmuch even if you can find one. There are not nearly enough jobs or pay to feed you and your family. Your people are not \nwelcomed here. Whether it be the police or the residents, people look down upon the 'Okies.' You may have reached \nthe end of this journey, but for your party, this is certainly not the end to their problems.");
+        for (int i = 0; i < people.size()-1; i++)
+        {
+            System.out.print(people.get(i).getName()+", ");
+        }
+        System.out.println("and "+people.get(people.size()-1).getName()+" made it to the end of the journey.");
+        calcScore(true, people);
         System.exit(0);
     } 
-    private static void badEnding()
+    private static void badEnding(List<Person> people)
     {
         System.out.println("You weren't able to make it to California. You travelled "+ distance + " miles.");
+        calcScore(false, people);
         System.exit(0);
     } 
     private static int min(int a, int b)
