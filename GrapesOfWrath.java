@@ -172,7 +172,7 @@ public class GrapesOfWrath
             }
             else if (num < 7)
             {
-                if (people.get(i).getName().equals("Pablo"))
+                if (people.get(i).getName().toLowerCase()equals("pablo"))
                 {
                     System.out.println(people.get(i).getName() + " was arrested for smuggling cocaine.");
                 } else
@@ -327,21 +327,21 @@ public class GrapesOfWrath
         System.out.println("You were able to fix the car, but it's too late to travel now.");
         stay(people);
     }
-    private static void death(Person p)
+    private static void death(Person per)
     {
         int num = (int)(1+Math.random()*2);
         if (money > 30.0)
         {
             if (num < 2)
-                System.out.println("You recall how " + p.getName() + " had always wanted a proper burial.");
-            System.out.println("A coroner costs $30. Will you go to a coroner (Type 1) or bury " + p.getName() + " on the side of the road (Type 0)?");
+                System.out.println("You recall how " + per.getName() + " had always wanted a proper burial.");
+            System.out.println("A coroner costs $30. Will you go to a coroner (Type 1) or bury " + per.getName() + " on the side of the road (Type 0)?");
             int response = console.nextInt();
             console.nextLine();
             if (response % 2 == 1)
                 money -= 30;
         } else
         {
-            System.out.println("You are too poor to afford a coroner, so you bury " + p.getName() + " on the side of the road.");
+            System.out.println("You are too poor to afford a coroner, so you bury " + per.getName() + " on the side of the road.");
         }
     }
     public static int getFood()
