@@ -24,9 +24,16 @@ public class Person
        health -= (int) (Math.random() * 25);
        if (!isAlive())
        {
-           System.out.println(name + " has died of disease.\n");
+           if (getName().toLowerCase().equals("pablo"))
+           {
+               System.out.println(name + " was shot by a rival cartel.\n");
+           } else
+           {
+               System.out.println(name + " has died of disease.\n");
+           }
        }
    }
+
    public boolean isAlive()
    {
        return health > 0;
